@@ -23,7 +23,19 @@ export async function makeMap(k: KaboomCtx, mapName: string) {
           // give each collider a tag
           collider.name !== "exit" ? "platform" : "exit",
         ]);
-
+      }
+      continue;
+    }
+    if (layer.name === "spawnpoints") {
+      for (const spawnPoint of layer.objects) {
+        if (spawnPoints[spawnPoint.name]) {
+          spawnPoints[spawnPoint.name].push({
+            x: spawnPoint.x,
+            y: spawnPoint.y,
+          });
+          // stop here for today 5/11
+          })
+        }
       }
     }
   }
