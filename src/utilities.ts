@@ -8,7 +8,7 @@ export async function makeMap(k: KaboomCtx, mapName: string) {
     k.scale(scale),
     k.pos(0, 0),
   ]);
-  const spawnPoints: { [key: string]: {x: number, y: number} } = {};
+  const spawnPoints: { [key: string]: {x: number, y: number}[] } = {};
 
   for (const layer of mapData.layers) {
     if (layer.name === "collider") {
@@ -29,14 +29,17 @@ export async function makeMap(k: KaboomCtx, mapName: string) {
     if (layer.name === "spawnpoints") {
       for (const spawnPoint of layer.objects) {
         if (spawnPoints[spawnPoint.name]) {
+          // if the spawn point already exists, add to the array
           spawnPoints[spawnPoint.name].push({
             x: spawnPoint.x,
             y: spawnPoint.y,
           });
-          // stop here for today 5/11
-          })
+          continue;
         }
+        // else, create the spawn point array
+        spawnPoints[spawnPoint.name] = [{x: spawnPoint.x, y: spawnPoint.y}];
       }
     }
   }
+  return { map, spawnPoints };
 }
