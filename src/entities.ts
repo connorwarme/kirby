@@ -71,4 +71,32 @@ export function makePlayer(k: KaboomCtx, posX: number, posY: number) {
     k.opacity(0),
     "inhaleEffect", // tag
   ])
+
+  // create inhale area hit box
+  const inhaleZone = k.add([
+    k.area({ shape: new k.Rect(k.vec2(0), 20, 4) }),
+    k.pos(), // empty for now, need to know direction of player
+    "inhaleZone", // tag
+  ])
+
+  inhaleZone.onUpdate(() => { // onUpdate is a callback that runs every frame
+    if (player.direction === "left") {
+      inhaleZone.pos = k.vec2(-14, 8); // position of inhaleZone relative to player
+      inhaleEffect.pos = k.vec2(player.pos.x - 60, player.pos.y + 0);
+      inhaleEffect.flipX = true; // flip inhaleEffect sprite
+      return;
+    }
+    inhaleZone.pos = k.vec2(14, 8);
+    inhaleEffect.pos = k.vec2(player.pos.x + 60, player.pos.y + 0);
+    inhaleEffect.flipX = false;
+  })
+
+  player.onUpdate(() => {
+    if (player.pos.y > 2000) { // y value increases as player falls
+      // if player falls off screen, reset game
+      k.go("level1");
+    }
+  })
+
+  return player;
 }

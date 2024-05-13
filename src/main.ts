@@ -1,5 +1,6 @@
 import { k } from "./kaboomCtx";
 import { makeMap } from "./utilities";
+import { makePlayer } from "./entities";
 
 async function gameSetup() {
   // load assets
@@ -56,9 +57,23 @@ async function gameSetup() {
       k.fixed(),
     ])
     k.add(level1Map);
+
+    const kirby = makePlayer(k, level1SpawnPoints.player[0].x, level1SpawnPoints.player[0].y);
+    k.add(kirby);
+
+    // set up camera view
+    // don't fully understand the nuance of this setup
+    k.camScale(k.vec2(0.7)) // also could be k.camScale(0.7, 0.7)
+    k.onUpdate(() => {
+      if (kirby.pos.x < level1Map.pos.x + 432) {
+        k.camPos(kirby.pos.x + 500, 800) // sets kirby up on left side of screen, so user can see what's coming
+      }
+    })
   })
-  
+
   k.go("level1")
 }
+// note - 5/13
+// is kirby spawnpoint too low? player just falls off screen. check in tiled!
 
 gameSetup()
