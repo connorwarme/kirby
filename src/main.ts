@@ -1,4 +1,5 @@
 import { k } from "./kaboomCtx";
+import { makeMap } from "./utilities";
 
 async function gameSetup() {
   // load assets
@@ -43,14 +44,21 @@ async function gameSetup() {
     k.fixed(),
   ])
   k.loadSprite("level1", "./level1.png");
-  // k.scene("level1", () => {
-  //   k.setGravity(2100);
-  //   k.add([
-  //     k.rect(k.width(), k.height()),
-  //     k.color(247, 215, 219),
-  //     k.fixed(),
-  //   ])
-  // })
+
+  // rename map and spawnPoints to differentiate each level
+  const { map: level1Map, spawnPoints: level1SpawnPoints } = await makeMap(k, "level1");
+
+  k.scene("level1", () => {
+    k.setGravity(2100);
+    k.add([
+      k.rect(k.width(), k.height()),
+      k.color(247, 215, 219),
+      k.fixed(),
+    ])
+    k.add(level1Map);
+  })
+  
+  k.go("level1")
 }
 
 gameSetup()

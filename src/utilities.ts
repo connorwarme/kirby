@@ -2,7 +2,7 @@ import { KaboomCtx } from "kaboom";
 import { scale } from "./constants";
 
 export async function makeMap(k: KaboomCtx, mapName: string) {
-  const mapData = await (await fetch(`./maps/${mapName}.json`)).json();
+  const mapData = await (await fetch(`./${mapName}.json`)).json();
   const map = k.make([
     k.sprite(mapName),
     k.scale(scale),
