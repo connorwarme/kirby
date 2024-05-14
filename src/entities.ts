@@ -157,7 +157,7 @@ export function setControls(k: KaboomCtx, player: PlayerGameObj) {
           return;
         }
         player.isInhaling = true;
-        player.play("kInhale");
+        player.play("kInhaling");
         inhaleEffectRef.opacity = 1;
         break;
       default:

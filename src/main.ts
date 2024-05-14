@@ -67,7 +67,7 @@ async function gameSetup() {
     k.camScale(k.vec2(0.7)); // also could be k.camScale(0.7, 0.7)
     k.onUpdate(() => {
       if (kirby.pos.x < level1Map.pos.x + 432) {
-        k.camPos(kirby.pos.x + 500, 800); // sets kirby up on left side of screen, so user can see what's coming
+        k.camPos(kirby.pos.x + 500, 870); // sets kirby up on left side of screen, so user can see what's coming
       }
     });
   });
