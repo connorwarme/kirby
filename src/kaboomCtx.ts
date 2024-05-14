@@ -6,6 +6,8 @@ export const k = kaboom({
   width: 256 * scale,
   height: 144 * scale,
   scale,
+  // letterbox helps with scaling, keeps aspect ratio
   letterbox: true,
+  // only want to use kaboom constants via k
   global: false
 });

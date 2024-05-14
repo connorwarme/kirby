@@ -189,6 +189,10 @@ export function setControls(k: KaboomCtx, player: PlayerGameObj) {
 
       player.isFull = false;
       k.wait(1, () => player.play("kIdle"));
+      return;
     }
+    inhaleEffectRef.opacity = 0;
+    player.isInhaling = false;
+    player.play("kIdle");
   });
 }

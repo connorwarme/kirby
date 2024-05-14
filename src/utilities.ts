@@ -6,7 +6,7 @@ export async function makeMap(k: KaboomCtx, mapName: string) {
   const map = k.make([
     k.sprite(mapName),
     k.scale(scale),
-    k.pos(0, 0),
+    k.pos(0),
   ]);
   const spawnPoints: { [key: string]: {x: number, y: number}[] } = {};
 
