@@ -196,3 +196,51 @@ export function setControls(k: KaboomCtx, player: PlayerGameObj) {
     player.play("kIdle");
   });
 }
+export function makeInhaleableEnemy (k: KaboomCtx, enemy: GameObj) {
+  enemy.onCollide("inhaleZone", () => {
+    enemy.isInhaleable = true;
+  });
+  enemy.onCollideEnd("inhaleZone", () => {
+    enemy.isInhaleable = false;
+  });
+  enemy.onCollide("shootingStar", (shootingStar: GameObj) => {
+    k.destroy(shootingStar);
+    k.destroy(enemy);
+  });
+  const playerRef = k.get("player")[0];
+  enemy.onUpdate(() => {
+    if (playerRef.isInhaling && enemy.isInhaleable) {
+      if (playerRef.direction === "right") {
+        enemy.move(-800, 0)
+        return;
+      }
+      enemy.move(800, 0);
+    }
+  });
+}
+export function makeFlameEnemy (k: KaboomCtx, posX: number, posY: number) {
+  const flame = k.add([
+    k.sprite("assets", { anim: "flame" }),
+    k.area({ 
+      shape: new k.Rect(k.vec2(4, 6), 8, 10),
+      collisionIgnore: ["enemy"],
+    }),
+    k.pos(posX * scale, posY * scale),
+    k.scale(scale),
+    k.body(),
+    k.state("idle", ["idle", "jump"]),
+    "enemy",
+  ]);
+  flame.onStateEnter("idle", async () => {
+    await k.wait(1); // async function, waits 1 second before executing next line
+    flame.enterState("jump");
+  })
+  flame.onStateEnter("jump", () => {
+    flame.jump(1000); // specify force of the jump
+  })
+  flame.onStateUpdate("jump", () => {
+    if (flame.isGrounded()) {
+      flame.enterState("idle");
+    }
+  })
+}
