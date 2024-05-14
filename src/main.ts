@@ -1,6 +1,6 @@
 import { k } from "./kaboomCtx";
 import { makeMap } from "./utilities";
-import { makePlayer } from "./entities";
+import { makePlayer, setControls } from "./entities";
 
 async function gameSetup() {
   // load assets
@@ -59,6 +59,7 @@ async function gameSetup() {
     k.add(level1Map);
 
     const kirby = makePlayer(k, level1SpawnPoints.player[0].x, level1SpawnPoints.player[0].y);
+    setControls(k, kirby);
     k.add(kirby);
 
     // set up camera view

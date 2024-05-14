@@ -105,7 +105,7 @@ export function makePlayer(k: KaboomCtx, posX: number, posY: number) {
 
   // create inhale area hit box
   const inhaleZone = k.add([
-    k.area({ shape: new k.Rect(k.vec2(0), 20, 4) }),
+    k.area({ shape: new k.Rect(k.vec2(0, 0), 20, 4) }),
     k.pos(), // empty for now, need to know direction of player
     "inhaleZone", // tag
   ]);
@@ -135,11 +135,11 @@ export function makePlayer(k: KaboomCtx, posX: number, posY: number) {
 }
 export function setControls(k: KaboomCtx, player: PlayerGameObj) {
   // k.get is a function that returns an array of objects with a certain tag
-   const inhaleEffectRef = k.get("inhaleEffect")[0];
+  const inhaleEffectRef = k.get("inhaleEffect")[0];
   // k.onKeyDown is a function that gives you the key pressed, runs a callback
-   k.onKeyDown((key) => {
+  k.onKeyDown((key) => {
     switch (key) {
-      case "left": 
+      case "left":
         player.direction = "left";
         player.flipX = true;
         player.move(-player.speed, 0);
@@ -160,7 +160,35 @@ export function setControls(k: KaboomCtx, player: PlayerGameObj) {
         player.play("kInhale");
         inhaleEffectRef.opacity = 1;
         break;
-      default: break;
+      default:
+        break;
     }
-   })
+  });
+  k.onKeyPress("space", () => {
+    player.doubleJump();
+  });
+  // good challenge - try to implement kirby's ability to imitate enemy / use their powers
+  // e.g. if kirby inhales a fire enemy, kirby can shoot fire
+  k.onKeyRelease("z", () => {
+    if (player.isFull) {
+      player.play("kInhale");
+      const shootingStar = k.add([
+        k.sprite("assets", { 
+          anim: "shootingStar",
+          flipX: !player.flipX, 
+          // tutorial has flipX: player.direction === "right", evaluate to boolean
+          // star sprite is originally facing left, e.g. flipX: true would make it face right
+         }),
+        k.area({ shape: new k.Rect(k.vec2(5, 4), 6, 6) }),
+        k.pos(player.direction === "left" ? player.pos.x - 80 : player.pos.x + 80, player.pos.y + 5),
+        k.scale(scale),
+        player.direction === "left" ? k.move(k.LEFT, 800) : k.move(k.RIGHT, 800),
+        "shootingStar",
+      ]);
+      shootingStar.onCollide("platform", () => k.destroy(shootingStar));
+
+      player.isFull = false;
+      k.wait(1, () => player.play("kIdle"));
+    }
+  });
 }
