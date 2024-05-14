@@ -39,16 +39,39 @@ async function gameSetup() {
       },
     },
   });
+  k.loadSprite("level0", "./level0.png");
   k.loadSprite("level1", "./level1.png");
 
-  k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
+  // k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
 
   // rename map and spawnPoints to differentiate each level
+  const { map: level0Map, spawnPoints: level0SpawnPoints } = await makeMap(
+    k,
+    "level0"
+  );
   const { map: level1Map, spawnPoints: level1SpawnPoints } = await makeMap(
     k,
     "level1"
   );
-
+  k.scene("level0", () => {
+    k.setGravity(2100);
+    k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
+    k.add(level0Map);
+    const kirby = makePlayer(
+      k,
+      level0SpawnPoints.player[0].x,
+      level0SpawnPoints.player[0].y
+    );
+    setControls(k, kirby);
+    k.add(kirby);
+    k.camScale(k.vec2(0.7)); // also could be k.camScale(0.7, 0.7)
+    k.onUpdate(() => {
+      if (kirby.pos.x < level1Map.pos.x + 432) {
+        k.camPos(kirby.pos.x + 500, 870); // sets kirby up on left side of screen, so user can see what's coming
+      }
+    });
+  });
+  // scene logic for level1
   k.scene("level1", () => {
     k.setGravity(2100);
     k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
@@ -72,7 +95,7 @@ async function gameSetup() {
     });
   });
 
-  k.go("level1");
+  k.go("level0");
 }
 
 gameSetup();

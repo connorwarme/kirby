@@ -66,7 +66,7 @@ export function makePlayer(k: KaboomCtx, posX: number, posY: number) {
     if (player.hp() === 0) {
       // if player has no health, destroy player, reset game
       k.destroy(player);
-      k.go("level1");
+      k.go("level0");
       return;
     }
     // if player can't inhale, but doesn't die, then player takes damage
@@ -91,7 +91,7 @@ export function makePlayer(k: KaboomCtx, posX: number, posY: number) {
   });
   player.onCollide("exit", () => {
     // if player touches exit, go to next level
-    k.go("level2");
+    k.go("level1");
   });
 
   // animation for inhale -> always playing, but change opacity depending on player input
@@ -104,8 +104,8 @@ export function makePlayer(k: KaboomCtx, posX: number, posY: number) {
   ]);
 
   // create inhale area hit box
-  const inhaleZone = k.add([
-    k.area({ shape: new k.Rect(k.vec2(0, 0), 20, 4) }),
+  const inhaleZone = player.add([
+    k.area({ shape: new k.Rect(k.vec2(0), 20, 4) }),
     k.pos(), // empty for now, need to know direction of player
     "inhaleZone", // tag
   ]);
@@ -127,7 +127,7 @@ export function makePlayer(k: KaboomCtx, posX: number, posY: number) {
     if (player.pos.y > 2000) {
       // y value increases as player falls
       // if player falls off screen, reset game
-      k.go("level1");
+      k.go("level0");
     }
   });
 
