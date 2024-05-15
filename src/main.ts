@@ -7,6 +7,7 @@ import {
   makePlayer,
   setControls,
 } from "./entities";
+import { globalGameState } from "./state";
 
 async function gameSetup() {
   // load assets
@@ -68,6 +69,8 @@ async function gameSetup() {
     "level3"
   );
   k.scene("level0", () => {
+    globalGameState.setCurrentScene("level0");
+    globalGameState.setNextScene("level1");
     k.setGravity(2100);
     k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
     k.add(level0Map);
@@ -100,6 +103,8 @@ async function gameSetup() {
   });
   // scene logic for level1
   k.scene("level1", () => {
+    globalGameState.setCurrentScene("level1");
+    globalGameState.setNextScene("level2");
     k.setGravity(2100);
     k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
     k.add(level1Map);
@@ -131,6 +136,8 @@ async function gameSetup() {
     }
   });
   k.scene("level2", () => {
+    globalGameState.setCurrentScene("level2");
+    globalGameState.setNextScene("level3");
     k.setGravity(2100);
     k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
     k.add(level2Map);
@@ -158,6 +165,8 @@ async function gameSetup() {
     }
   });
   k.scene("level3", () => {
+    globalGameState.setCurrentScene("level3");
+    globalGameState.setNextScene("end");
     k.setGravity(2100);
     k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
     k.add(level3Map);
@@ -182,7 +191,7 @@ async function gameSetup() {
     }
   });
 
-  k.go("level3");
+  k.go("level0");
 }
 
 gameSetup();

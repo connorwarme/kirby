@@ -10,6 +10,7 @@ import {
   PosComp,
   ScaleComp,
 } from "kaboom";
+import { globalGameState } from "./state";
 import { scale } from "./constants";
 
 // create type
@@ -66,7 +67,7 @@ export function makePlayer(k: KaboomCtx, posX: number, posY: number) {
     if (player.hp() === 0) {
       // if player has no health, destroy player, reset game
       k.destroy(player);
-      k.go("level0");
+      k.go(globalGameState.currentScene);
       return;
     }
     // if player can't inhale, but doesn't die, then player takes damage
@@ -91,7 +92,7 @@ export function makePlayer(k: KaboomCtx, posX: number, posY: number) {
   });
   player.onCollide("exit", () => {
     // if player touches exit, go to next level
-    k.go("level1");
+    k.go(globalGameState.nextScene);
   });
 
   // animation for inhale -> always playing, but change opacity depending on player input
@@ -228,6 +229,7 @@ export function makeFlameEnemy (k: KaboomCtx, posX: number, posY: number) {
     k.pos(posX * scale, posY * scale),
     k.scale(scale),
     k.body(),
+    k.offscreen({ destroy: true, distance: 400 }),
     k.state("idle", ["idle", "jump"]),
     {
       isInhaleable: false,
@@ -259,6 +261,7 @@ export function makeGuyEnemy (k: KaboomCtx, posX: number, posY: number) {
     k.pos(posX * scale, posY * scale),
     k.scale(scale),
     k.body(),
+    k.offscreen({ destroy: true, distance: 400 }),
     k.state("idle", ["idle", "left", "right", "jump"]),
     {
       isInhaleable: false,
