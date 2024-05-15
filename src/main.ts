@@ -91,7 +91,11 @@ async function gameSetup() {
       makeGuyEnemy(k, guy.x, guy.y);
     }
     for (const bird of level0SpawnPoints.bird) {
-      makeBirdEnemy(k, bird.x, bird.y, 100);
+      const speeds = [100, 150, 200, 250, 300];
+      k.loop(7, () => {
+        const randomSpeed = speeds[Math.floor(Math.random() * speeds.length)];
+        makeBirdEnemy(k, bird.x, bird.y, randomSpeed);
+      });
     }
   });
   // scene logic for level1
@@ -118,6 +122,12 @@ async function gameSetup() {
     });
     for (const flame of level1SpawnPoints.flame) {
       makeFlameEnemy(k, flame.x, flame.y);
+    }
+    for (const guy of level1SpawnPoints.guy) {
+      makeGuyEnemy(k, guy.x, guy.y);
+    }
+    for (const bird of level1SpawnPoints.bird) {
+      makeBirdEnemy(k, bird.x, bird.y, 100);
     }
   });
   k.scene("level2", () => {
