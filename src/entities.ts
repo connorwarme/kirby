@@ -198,23 +198,23 @@ export function setControls(k: KaboomCtx, player: PlayerGameObj) {
 }
 export function makeInhaleableEnemy (k: KaboomCtx, enemy: GameObj) {
   enemy.onCollide("inhaleZone", () => {
-    enemy.isInhaleable = true;
+    enemy.isInhaleable = true; // enemy is within reach, kirby can inhale
   });
   enemy.onCollideEnd("inhaleZone", () => {
-    enemy.isInhaleable = false;
+    enemy.isInhaleable = false; // enemy is out of reach, kirby can't inhale
   });
   enemy.onCollide("shootingStar", (shootingStar: GameObj) => {
-    k.destroy(shootingStar);
     k.destroy(enemy);
+    k.destroy(shootingStar);
   });
-  const playerRef = k.get("player")[0];
+  const playerRef = k.get("player")[0]; // create player reference
   enemy.onUpdate(() => {
     if (playerRef.isInhaling && enemy.isInhaleable) {
       if (playerRef.direction === "right") {
-        enemy.move(-800, 0)
+        enemy.move(-800, 0) // move enemy to the left, -800 force on x-axis
         return;
       }
-      enemy.move(800, 0);
+      enemy.move(800, 0); // make enemy move to the right (towards kirby)
     }
   });
 }
@@ -229,8 +229,12 @@ export function makeFlameEnemy (k: KaboomCtx, posX: number, posY: number) {
     k.scale(scale),
     k.body(),
     k.state("idle", ["idle", "jump"]),
+    {
+      isInhaleable: false,
+    },
     "enemy",
   ]);
+  makeInhaleableEnemy(k, flame);
   flame.onStateEnter("idle", async () => {
     await k.wait(1); // async function, waits 1 second before executing next line
     flame.enterState("jump");

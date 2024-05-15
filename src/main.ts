@@ -1,6 +1,6 @@
 import { k } from "./kaboomCtx";
 import { makeMap } from "./utilities";
-import { makePlayer, setControls } from "./entities";
+import { makeFlameEnemy, makePlayer, setControls } from "./entities";
 
 async function gameSetup() {
   // load assets
@@ -70,6 +70,9 @@ async function gameSetup() {
         k.camPos(kirby.pos.x + 500, 870); // sets kirby up on left side of screen, so user can see what's coming
       }
     });
+    for (const flame of level0SpawnPoints.flame) {
+      makeFlameEnemy(k, flame.x, flame.y);
+    }
   });
   // scene logic for level1
   k.scene("level1", () => {
