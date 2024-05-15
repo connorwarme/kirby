@@ -1,6 +1,12 @@
 import { k } from "./kaboomCtx";
 import { makeMap } from "./utilities";
-import { makeBirdEnemy, makeFlameEnemy, makeGuyEnemy, makePlayer, setControls } from "./entities";
+import {
+  makeBirdEnemy,
+  makeFlameEnemy,
+  makeGuyEnemy,
+  makePlayer,
+  setControls,
+} from "./entities";
 
 async function gameSetup() {
   // load assets
@@ -41,8 +47,7 @@ async function gameSetup() {
   });
   k.loadSprite("level0", "./level0.png");
   k.loadSprite("level1", "./level1.png");
-
-  // k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
+  k.loadSprite("level2", "./level2.png");
 
   // rename map and spawnPoints to differentiate each level
   const { map: level0Map, spawnPoints: level0SpawnPoints } = await makeMap(
@@ -52,6 +57,10 @@ async function gameSetup() {
   const { map: level1Map, spawnPoints: level1SpawnPoints } = await makeMap(
     k,
     "level1"
+  );
+  const { map: level2Map, spawnPoints: level2SpawnPoints } = await makeMap(
+    k,
+    "level2"
   );
   k.scene("level0", () => {
     k.setGravity(2100);
@@ -106,8 +115,35 @@ async function gameSetup() {
       makeFlameEnemy(k, flame.x, flame.y);
     }
   });
+  k.scene("level2", () => {
+    k.setGravity(2100);
+    k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
+    k.add(level2Map);
+    const kirby = makePlayer(
+      k,
+      level2SpawnPoints.player[0].x,
+      level2SpawnPoints.player[0].y
+    );
+    setControls(k, kirby);
+    k.add(kirby);
+    k.camScale(k.vec2(0.7)); // also could be k.camScale(0.7, 0.7)
+    k.onUpdate(() => {
+      if (kirby.pos.x < level1Map.pos.x + 432) {
+        k.camPos(kirby.pos.x + 500, 870); // sets kirby up on left side of screen, so user can see what's coming
+      }
+    });
+    for (const flame of level2SpawnPoints.flame) {
+      makeFlameEnemy(k, flame.x, flame.y);
+    }
+    for (const guy of level2SpawnPoints.guy) {
+      makeGuyEnemy(k, guy.x, guy.y);
+    }
+    for (const bird of level2SpawnPoints.bird) {
+      makeBirdEnemy(k, bird.x, bird.y, 100);
+    }
+  });
 
-  k.go("level0");
+  k.go("level2");
 }
 
 gameSetup();
