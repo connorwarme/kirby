@@ -247,4 +247,66 @@ export function makeFlameEnemy (k: KaboomCtx, posX: number, posY: number) {
       flame.enterState("idle");
     }
   })
+  return flame;
 }
+export function makeGuyEnemy (k: KaboomCtx, posX: number, posY: number) {
+  const guy = k.add([
+    k.sprite("assets", { anim: "guyWalk" }),
+    k.area({ 
+      shape: new k.Rect(k.vec2(2, 3.9), 12, 12),
+      collisionIgnore: ["enemy"],
+    }),
+    k.pos(posX * scale, posY * scale),
+    k.scale(scale),
+    k.body(),
+    k.state("idle", ["idle", "left", "right", "jump"]),
+    {
+      isInhaleable: false,
+      speed: 100,
+    },
+    "enemy",
+  ]);
+  makeInhaleableEnemy(k, guy);
+  guy.onStateEnter("idle", async () => {
+    await k.wait(1);
+    guy.enterState("left");
+  });
+  guy.onStateEnter("left", async () => {
+    guy.flipX = false;
+    await k.wait(2);
+    guy.enterState("right");
+  });
+  guy.onStateUpdate("left", () => {
+    guy.move(-guy.speed, 0);
+  });
+  guy.onStateEnter("right", async () => {
+    guy.flipX = true;
+    await k.wait(2);
+    guy.enterState("left");
+  });
+  guy.onStateUpdate("right", () => {
+    guy.move(guy.speed, 0);
+  });
+  return guy;
+}
+export function makeBirdEnemy (k: KaboomCtx, posX: number, posY: number, speed: number) {
+  const bird = k.add([
+    k.sprite("assets", { anim: "bird" }),
+    k.area({ 
+      shape: new k.Rect(k.vec2(4, 6), 8, 10),
+      collisionIgnore: ["enemy"],
+    }),
+    k.pos(posX * scale, posY * scale),
+    k.scale(scale),
+    k.body({ isStatic: true }),
+    k.move(k.LEFT, speed),
+    k.offscreen({ destroy: true, distance: 400 }),
+    {
+      isInhaleable: false,
+    },
+    "enemy",
+  ])
+  makeInhaleableEnemy(k, bird);
+
+  return bird;
+};

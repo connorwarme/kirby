@@ -1,6 +1,6 @@
 import { k } from "./kaboomCtx";
 import { makeMap } from "./utilities";
-import { makeFlameEnemy, makePlayer, setControls } from "./entities";
+import { makeBirdEnemy, makeFlameEnemy, makeGuyEnemy, makePlayer, setControls } from "./entities";
 
 async function gameSetup() {
   // load assets
@@ -73,6 +73,12 @@ async function gameSetup() {
     for (const flame of level0SpawnPoints.flame) {
       makeFlameEnemy(k, flame.x, flame.y);
     }
+    for (const guy of level0SpawnPoints.guy) {
+      makeGuyEnemy(k, guy.x, guy.y);
+    }
+    for (const bird of level0SpawnPoints.bird) {
+      makeBirdEnemy(k, bird.x, bird.y, 100);
+    }
   });
   // scene logic for level1
   k.scene("level1", () => {
@@ -96,6 +102,9 @@ async function gameSetup() {
         k.camPos(kirby.pos.x + 500, 870); // sets kirby up on left side of screen, so user can see what's coming
       }
     });
+    for (const flame of level1SpawnPoints.flame) {
+      makeFlameEnemy(k, flame.x, flame.y);
+    }
   });
 
   k.go("level0");
