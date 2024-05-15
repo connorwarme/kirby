@@ -48,6 +48,7 @@ async function gameSetup() {
   k.loadSprite("level0", "./level0.png");
   k.loadSprite("level1", "./level1.png");
   k.loadSprite("level2", "./level2.png");
+  k.loadSprite("level3", "./level3.png");
 
   // rename map and spawnPoints to differentiate each level
   const { map: level0Map, spawnPoints: level0SpawnPoints } = await makeMap(
@@ -61,6 +62,10 @@ async function gameSetup() {
   const { map: level2Map, spawnPoints: level2SpawnPoints } = await makeMap(
     k,
     "level2"
+  );
+  const { map: level3Map, spawnPoints: level3SpawnPoints } = await makeMap(
+    k,
+    "level3"
   );
   k.scene("level0", () => {
     k.setGravity(2100);
@@ -142,8 +147,32 @@ async function gameSetup() {
       makeBirdEnemy(k, bird.x, bird.y, 100);
     }
   });
+  k.scene("level3", () => {
+    k.setGravity(2100);
+    k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
+    k.add(level3Map);
+    const kirby = makePlayer(
+      k,
+      level3SpawnPoints.player[0].x,
+      level3SpawnPoints.player[0].y
+    );
+    setControls(k, kirby);
+    k.add(kirby);
+    k.camScale(k.vec2(0.7)); // also could be k.camScale(0.7, 0.7)
+    k.onUpdate(() => {
+      if (kirby.pos.x < level1Map.pos.x + 432) {
+        k.camPos(kirby.pos.x + 500, 870); // sets kirby up on left side of screen, so user can see what's coming
+      }
+    });
+    for (const flame of level3SpawnPoints.flame) {
+      makeFlameEnemy(k, flame.x, flame.y);
+    }
+    for (const guy of level3SpawnPoints.guy) {
+      makeGuyEnemy(k, guy.x, guy.y);
+    }
+  });
 
-  k.go("level2");
+  k.go("level3");
 }
 
 gameSetup();
