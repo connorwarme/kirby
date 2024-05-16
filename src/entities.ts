@@ -170,31 +170,36 @@ export function setControls(k: KaboomCtx, player: PlayerGameObj) {
   });
   // good challenge - try to implement kirby's ability to imitate enemy / use their powers
   // e.g. if kirby inhales a fire enemy, kirby can shoot fire
-  k.onKeyRelease("z", () => {
-    if (player.isFull) {
-      player.play("kInhale");
-      const shootingStar = k.add([
-        k.sprite("assets", { 
-          anim: "shootingStar",
-          flipX: !player.flipX, 
-          // tutorial has flipX: player.direction === "right", evaluate to boolean
-          // star sprite is originally facing left, e.g. flipX: true would make it face right
-         }),
-        k.area({ shape: new k.Rect(k.vec2(5, 4), 6, 6) }),
-        k.pos(player.direction === "left" ? player.pos.x - 80 : player.pos.x + 80, player.pos.y + 5),
-        k.scale(scale),
-        player.direction === "left" ? k.move(k.LEFT, 800) : k.move(k.RIGHT, 800),
-        "shootingStar",
-      ]);
-      shootingStar.onCollide("platform", () => k.destroy(shootingStar));
+  k.onKeyRelease((key) => {
+    switch (key) {
+      case "z":
+        if (player.isFull) {
+          player.play("kInhaling");
+          const shootingStar = k.add([
+            k.sprite("assets", { 
+              anim: "shootingStar",
+              flipX: !player.flipX, 
+              // tutorial has flipX: player.direction === "right", evaluate to boolean
+              // star sprite is originally facing left, e.g. flipX: true would make it face right
+            }),
+            k.area({ shape: new k.Rect(k.vec2(5, 4), 6, 6) }),
+            k.pos(player.direction === "left" ? player.pos.x - 80 : player.pos.x + 80, player.pos.y + 5),
+            k.scale(scale),
+            player.direction === "left" ? k.move(k.LEFT, 800) : k.move(k.RIGHT, 800),
+            "shootingStar",
+          ]);
+          shootingStar.onCollide("platform", () => k.destroy(shootingStar));
 
-      player.isFull = false;
-      k.wait(1, () => player.play("kIdle"));
-      return;
-    }
-    inhaleEffectRef.opacity = 0;
-    player.isInhaling = false;
-    player.play("kIdle");
+          player.isFull = false;
+          k.wait(1, () => player.play("kIdle"));
+          break;
+        }
+        inhaleEffectRef.opacity = 0;
+        player.isInhaling = false;
+        player.play("kIdle");
+        break;
+      default:
+      }
   });
 }
 export function makeInhaleableEnemy (k: KaboomCtx, enemy: GameObj) {
