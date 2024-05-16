@@ -46,12 +46,14 @@ async function gameSetup() {
       },
     },
   });
+  k.loadSprite("level-intro", "./level-intro.png");
   k.loadSprite("level0", "./level0.png");
   k.loadSprite("level1", "./level1.png");
   k.loadSprite("level2", "./level2.png");
   k.loadSprite("level3", "./level3.png");
 
   // rename map and spawnPoints to differentiate each level
+  const { map: levelIntroMap, spawnPoints: levelIntroSpawnPoints } = await makeMap(k, "level-intro");
   const { map: level0Map, spawnPoints: level0SpawnPoints } = await makeMap(
     k,
     "level0"
@@ -68,6 +70,25 @@ async function gameSetup() {
     k,
     "level3"
   );
+  k.scene("level-intro", () => {
+    globalGameState.setCurrentScene("level-intro");
+    globalGameState.setNextScene("level0");
+    k.setGravity(2100);
+    k.add(levelIntroMap);
+    const kirby = makePlayer(
+      k,
+      levelIntroSpawnPoints.player[0].x,
+      levelIntroSpawnPoints.player[0].y
+    );
+    setControls(k, kirby);
+    k.add(kirby);
+    k.camScale(k.vec2(0.7)); // also could be k.camScale(0.7, 0.7)
+    k.onUpdate(() => {
+      if (kirby.pos.x < levelIntroMap.pos.x + 432) {
+        k.camPos(kirby.pos.x + 500, 870); // sets kirby up on left side of screen, so user can see what's coming
+      }
+    });
+  });
   k.scene("level0", () => {
     globalGameState.setCurrentScene("level0");
     globalGameState.setNextScene("level1");
@@ -81,7 +102,7 @@ async function gameSetup() {
     );
     setControls(k, kirby);
     k.add(kirby);
-    k.camScale(k.vec2(0.7)); // also could be k.camScale(0.7, 0.7)
+    k.camScale(k.vec2(0.5)); // also could be k.camScale(0.7, 0.7)
     k.onUpdate(() => {
       if (kirby.pos.x < level1Map.pos.x + 432) {
         k.camPos(kirby.pos.x + 500, 870); // sets kirby up on left side of screen, so user can see what's coming
@@ -119,7 +140,7 @@ async function gameSetup() {
 
     // set up camera view
     // don't fully understand the nuance of this setup
-    k.camScale(k.vec2(0.7)); // also could be k.camScale(0.7, 0.7)
+    k.camScale(k.vec2(0.5)); // also could be k.camScale(0.7, 0.7)
     k.onUpdate(() => {
       if (kirby.pos.x < level1Map.pos.x + 432) {
         k.camPos(kirby.pos.x + 500, 870); // sets kirby up on left side of screen, so user can see what's coming
@@ -191,7 +212,7 @@ async function gameSetup() {
     }
   });
 
-  k.go("level0");
+  k.go("level-intro");
 }
 
 gameSetup();

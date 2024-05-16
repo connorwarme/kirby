@@ -128,7 +128,7 @@ export function makePlayer(k: KaboomCtx, posX: number, posY: number) {
     if (player.pos.y > 2000) {
       // y value increases as player falls
       // if player falls off screen, reset game
-      k.go("level0");
+      k.go("level-intro");
     }
   });
 
