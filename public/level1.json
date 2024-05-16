@@ -295,7 +295,7 @@
                 {
                  "height":0,
                  "id":22,
-                 "name":"enemy",
+                 "name":"guy",
                  "point":true,
                  "rotation":0,
                  "type":"",
@@ -318,7 +318,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
