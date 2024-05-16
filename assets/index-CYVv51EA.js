@@ -4102,30 +4102,34 @@ function setControls(k2, player) {
   k2.onKeyPress("space", () => {
     player.doubleJump();
   });
-  k2.onKeyRelease("z", () => {
-    if (player.isFull) {
-      player.play("kInhale");
-      const shootingStar = k2.add([
-        k2.sprite("assets", {
-          anim: "shootingStar",
-          flipX: !player.flipX
-          // tutorial has flipX: player.direction === "right", evaluate to boolean
-          // star sprite is originally facing left, e.g. flipX: true would make it face right
-        }),
-        k2.area({ shape: new k2.Rect(k2.vec2(5, 4), 6, 6) }),
-        k2.pos(player.direction === "left" ? player.pos.x - 80 : player.pos.x + 80, player.pos.y + 5),
-        k2.scale(scale),
-        player.direction === "left" ? k2.move(k2.LEFT, 800) : k2.move(k2.RIGHT, 800),
-        "shootingStar"
-      ]);
-      shootingStar.onCollide("platform", () => k2.destroy(shootingStar));
-      player.isFull = false;
-      k2.wait(1, () => player.play("kIdle"));
-      return;
+  k2.onKeyRelease((key) => {
+    switch (key) {
+      case "z":
+        if (player.isFull) {
+          player.play("kInhaling");
+          const shootingStar = k2.add([
+            k2.sprite("assets", {
+              anim: "shootingStar",
+              flipX: !player.flipX
+              // tutorial has flipX: player.direction === "right", evaluate to boolean
+              // star sprite is originally facing left, e.g. flipX: true would make it face right
+            }),
+            k2.area({ shape: new k2.Rect(k2.vec2(5, 4), 6, 6) }),
+            k2.pos(player.direction === "left" ? player.pos.x - 80 : player.pos.x + 80, player.pos.y + 5),
+            k2.scale(scale),
+            player.direction === "left" ? k2.move(k2.LEFT, 800) : k2.move(k2.RIGHT, 800),
+            "shootingStar"
+          ]);
+          shootingStar.onCollide("platform", () => k2.destroy(shootingStar));
+          player.isFull = false;
+          k2.wait(1, () => player.play("kIdle"));
+          break;
+        }
+        inhaleEffectRef.opacity = 0;
+        player.isInhaling = false;
+        player.play("kIdle");
+        break;
     }
-    inhaleEffectRef.opacity = 0;
-    player.isInhaling = false;
-    player.play("kIdle");
   });
 }
 function makeInhaleableEnemy(k2, enemy) {
