@@ -74,6 +74,7 @@ async function gameSetup() {
     globalGameState.setCurrentScene("level-intro");
     globalGameState.setNextScene("level0");
     k.setGravity(2100);
+    k.add([k.rect(k.width(), k.height()), k.color(247, 215, 219), k.fixed()]);
     k.add(levelIntroMap);
     const kirby = makePlayer(
       k,
